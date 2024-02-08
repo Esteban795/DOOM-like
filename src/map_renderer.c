@@ -1,4 +1,4 @@
-#include "../headers/map_renderer.h"
+#include "../include/map_renderer.h"
 
 
 int max(int a, int b){

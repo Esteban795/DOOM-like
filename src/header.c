@@ -1,4 +1,4 @@
-#include "../headers/header.h"
+#include "../include/header.h"
 
 header read_header(FILE* f){
     header head = {

@@ -1,4 +1,4 @@
-#include "../headers/vertex.h"
+#include "../include/vertex.h"
 
 vertex read_vertex(FILE* f,int offset){
     vertex pos = {

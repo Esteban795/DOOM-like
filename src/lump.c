@@ -1,4 +1,4 @@
-#include "../headers/lump.h"
+#include "../include/lump.h"
 
 lump* read_directory(FILE* f,header h){
     lump* directory = malloc(sizeof(lump) * h.lump_count);

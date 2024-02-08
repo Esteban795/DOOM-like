@@ -1,4 +1,4 @@
-#include "../headers/wad_reader.h"
+#include "../include/wad_reader.h"
 
 // handles all kind of error at SDL startup
 int start_SDL(SDL_Window** window,SDL_Renderer** renderer,int width,int height, const char* title){

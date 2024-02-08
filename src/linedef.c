@@ -1,4 +1,4 @@
-#include "../headers/linedef.h"
+#include "../include/linedef.h"
 
 linedef read_linedef(FILE* f, int offset){
     linedef line = {
