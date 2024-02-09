@@ -1,5 +1,5 @@
-#ifndef WAD_READER_H
-#define WAD_READER_H
+#ifndef WAD_DATA_H
+#define WAD_DATA_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,14 +35,5 @@ struct WADData {
 };
 
 typedef struct WADData wad_data;
-
-struct Engine {
-    const char* wadPath;
-    bool running;
-    SDL_Renderer* renderer;
-    wad_data wData;
-};
-
-typedef struct Engine engine;
 
 #endif

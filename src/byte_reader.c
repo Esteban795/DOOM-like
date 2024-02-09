@@ -1,4 +1,4 @@
-#include "../headers/byte_reader.h"
+#include "../include/byte_reader.h"
 
 byte read_1_byte(FILE* f, int offset){
     byte* b = read_bytes(f,1,offset);
