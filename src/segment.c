@@ -2,12 +2,12 @@
 
 segment read_segment(FILE* f, int offset) {
     segment s;
-    s.start_vertex_id = read_bytes(f, offset, 2);
-    s.end_vertex_id = read_bytes(f, offset + 2, 2);
-    s.angle = read_bytes(f, offset + 4, 2);
-    s.linedef_id = read_bytes(f, offset + 6, 2);
-    s.direction = read_bytes(f, offset + 8, 2);
-    s.offset = read_bytes(f, offset + 10, 2);
+    s.start_vertex_id = read_i16(f, offset);
+    s.end_vertex_id = read_i16(f, offset + 2);
+    s.angle = read_i16(f, offset + 4);
+    s.linedef_id = read_i16(f, offset + 6);
+    s.direction = read_i16(f, offset + 8);
+    s.offset = read_i16(f, offset + 10);
     return s;
 }
 

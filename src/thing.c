@@ -2,11 +2,11 @@
 
 thing read_thing(FILE* f, int offset) {
     thing t;
-    t.x = read_bytes(f, offset, 2);
-    t.y = read_bytes(f, offset + 2, 2);
-    t.angle = read_bytes(f, offset + 4, 2);
-    t.type = read_bytes(f, offset + 6, 2);
-    t.flags = read_bytes(f, offset + 8, 2);
+    t.x = read_i16(f, offset);
+    t.y = read_i16(f, offset + 2);
+    t.angle = read_i16(f, offset + 4);
+    t.type = read_i16(f, offset + 6);
+    t.flags = read_i16(f, offset + 8);
     return t;
 }
 

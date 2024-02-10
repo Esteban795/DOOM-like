@@ -3,8 +3,8 @@
 
 subsector read_subsector(FILE* f, int offset) {
     subsector s;
-    s.num_segs = read_bytes(f, offset, 2);
-    s.first_seg_id = read_bytes(f, offset + 2, 2);
+    s.num_segs = read_i16(f, offset);
+    s.first_seg_id = read_i16(f, offset + 2);
     return s;
 }
 

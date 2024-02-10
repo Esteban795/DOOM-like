@@ -3,6 +3,10 @@
 
 wad_data init_wad_data(const char* path){
     FILE* file = fopen(path,"rb");
+    if (file == NULL){
+        printf("Error opening file\n");
+        exit(1);
+    } 
     wad_data wd;
     wd.header = read_header(file);
     wd.directory = read_directory(file,wd.header);
@@ -17,10 +21,33 @@ wad_data init_wad_data(const char* path){
     wd.linedefs = get_linedefs_from_lump(file,wd.directory,wd.map_index + LINEDEFS,14,0,wd.len_linedefs);
     wd.nodes = get_nodes_from_lump(file,wd.directory,wd.map_index + NODES,28,0,wd.len_nodes);
     wd.subsectors = get_subsectors_from_lump(file,wd.directory,wd.map_index + SSECTORS,4,0,wd.len_subsectors);
-    wd.segs = get_segs_from_lump(file,wd.directory,wd.map_index + SEGS,12,0,wd.len_segs);
+    wd.segs = get_segments_from_lump(file,wd.directory,wd.map_index + SEGS,12,0,wd.len_segs);
     wd.things = get_things_from_lump(file,wd.directory,wd.map_index + THINGS,10,0,wd.len_things);
     // int* bounds = get_map_bounds(wd.vertexes,wd.len_vertexes);
     // wd.vertexes = remap_vertexes(wd.vertexes,wd.len_vertexes,bounds);
     // free(bounds); //won't be used anymore
     return wd;
+}
+
+
+int main(void){
+    wad_data wd = init_wad_data("maps/DOOM1.WAD");
+    printf("Vertexes count : %d\n",wd.len_vertexes);
+    printf("Linedefs count : %d\n",wd.len_linedefs);
+    printf("Nodes count : %d\n",wd.len_nodes);
+    printf("Subsectors count : %d\n",wd.len_subsectors);
+    printf("Segs count : %d\n",wd.len_segs);
+    printf("Things count : %d\n",wd.len_things);
+    free(wd.vertexes);
+    free(wd.linedefs);
+    free(wd.header.wad_type);
+    free(wd.nodes);
+    free(wd.subsectors);
+    free(wd.segs);
+    free(wd.things);
+    for (int i = 0; i < wd.header.lump_count;i++){
+        free(wd.directory[i].lump_name);
+    }
+    free(wd.directory);
+    return 0;
 }
