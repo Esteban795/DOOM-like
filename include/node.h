@@ -20,10 +20,10 @@ struct Node {
     i16 y_partition;
     i16 dx_partition;
     i16 dy_partition;
-    bbox left_bbox;
-    bbox right_bbox;
-    i16 right_child_id;
-    i16 left_child_id;
+    bbox back_bbox;
+    bbox front_bbox;
+    i16 front_child_id;
+    i16 back_child_id;
 };
 
 typedef struct Node node;

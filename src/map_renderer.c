@@ -10,7 +10,7 @@ int min(int a, int b){
 }
 
 //code stolen from the internet, I just needed to draw a circle for the vertexes.
-void DrawCircle(SDL_Renderer* renderer, int32_t centreX, int32_t centreY, int32_t radius){
+static void DrawCircle(SDL_Renderer* renderer, int32_t centreX, int32_t centreY, int32_t radius){
    const int32_t diameter = (radius * 2);
    int32_t x = (radius - 1);
    int32_t y = 0;
@@ -89,7 +89,7 @@ vertex* remap_vertexes(vertex* vertexes, int len, int* map_bounds){
     return remapped_vertexes;
 }
 
-void draw_linedefs(SDL_Renderer* renderer,linedef* linedefs,int len,vertex* vertexes){
+static void draw_linedefs(SDL_Renderer* renderer,linedef* linedefs,int len,vertex* vertexes){
     SDL_SetRenderDrawColor(renderer,255,0,0,255);
     for (int i = 0; i < len; i++){
         vertex p1 = vertexes[linedefs[i].start_vertex_id];
@@ -98,9 +98,62 @@ void draw_linedefs(SDL_Renderer* renderer,linedef* linedefs,int len,vertex* vert
     }
 }
 
-void draw_vertexes(SDL_Renderer* renderer,vertex* vertexes,int len){
+static void draw_vertexes(SDL_Renderer* renderer,vertex* vertexes,int len){
     SDL_SetRenderDrawColor(renderer,255,255,255,255);
     for (int i = 0; i < len; i++){
         DrawCircle(renderer,vertexes[i].x,vertexes[i].y,5);
     }
+}
+
+static void draw_bbox(map_renderer* mr,bbox b,color c){
+    SDL_SetRenderDrawColor(mr->engine->renderer,c.r,c.g,c.b,255);
+    i16 x_min = mr->map_bounds.left;
+    i16 x_max = mr->map_bounds.right;
+    i16 y_min = mr->map_bounds.top;
+    i16 y_max = mr->map_bounds.bottom;
+    int x = remap_x(b.left,x_min,x_max);
+    int y = remap_y(b.top,y_min,y_max);
+    int w = remap_x(b.right,x_min,x_max) - x;
+    int h = remap_y(b.bottom,y_min,y_max) - y;
+    SDL_Rect rect = {.x = x, .y = y, .w = w, .h = h};
+    SDL_RenderDrawRect(mr->engine->renderer,&rect);
+}
+
+static void draw_node(map_renderer* mr,int node_id){
+    node n = mr->engine->wData.nodes[node_id];
+    bbox bbox_front = n.front_bbox;
+    bbox bbox_back = n.back_bbox;
+    draw_bbox(mr,bbox_front,(color){255,0,0});
+    draw_bbox(mr,bbox_back,(color){0,255,0});
+    i16 x1 = remap_x(n.x_partition,mr->map_bounds.left,mr->map_bounds.right);
+    i16 y1 = remap_y(n.y_partition,mr->map_bounds.top,mr->map_bounds.bottom);
+    i16 x2 = remap_x(n.x_partition + n.dx_partition,mr->map_bounds.left,mr->map_bounds.right);
+    i16 y2 = remap_y(n.y_partition + n.dy_partition,mr->map_bounds.top,mr->map_bounds.bottom);
+    SDL_RenderDrawLine(mr->engine->renderer,x1,y1,x2,y2);
+}
+
+static void draw_player(map_renderer* mr){
+    SDL_SetRenderDrawColor(mr->engine->renderer,0,0,255,255);
+    i16 x = remap_x(mr->engine->p->x,mr->map_bounds.left,mr->map_bounds.right);
+    i16 y = remap_y(mr->engine->p->y,mr->map_bounds.top,mr->map_bounds.bottom);
+    SDL_Rect rect = {.x = x, .y = y, .w = 10, .h = 10};
+    SDL_RenderFillRect(mr->engine->renderer,&rect);
+}
+
+void draw(map_renderer* mr){
+    draw_linedefs(mr->engine->renderer,mr->linedefs,mr->wData.len_linedefs,mr->vertexes);
+    draw_vertexes(mr->engine->renderer,mr->vertexes,mr->wData.len_vertexes);
+    draw_node(mr,mr->engine->bsp->root_node_id);
+}
+
+map_renderer* map_renderer_init(engine* e){
+    map_renderer* mr = malloc(sizeof(map_renderer));
+    mr->engine = e;
+    mr->wData = e->wData;
+    int* bounds = get_map_bounds(mr->wData.vertexes,mr->wData.len_vertexes);
+    mr->vertexes = remap_vertexes(mr->wData.vertexes,mr->wData.len_vertexes,bounds);
+    mr->linedefs = mr->wData.linedefs;
+    mr->map_bounds = (bbox){.top = bounds[2], .bottom = bounds[3], .left = bounds[0], .right = bounds[1]};
+    free(bounds);
+    return mr;
 }

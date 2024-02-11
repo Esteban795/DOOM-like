@@ -24,16 +24,18 @@ struct WADData {
     linedef* linedefs;
     node* nodes;
     subsector* subsectors;
-    segment* segs;
+    segment* segments;
     thing* things;
     int len_vertexes;
     int len_linedefs;
     int len_nodes;
     int len_subsectors;
-    int len_segs;
+    int len_segments;
     int len_things;
 };
 
 typedef struct WADData wad_data;
+
+wad_data init_wad_data(const char* path);
 
 #endif
