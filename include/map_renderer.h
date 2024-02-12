@@ -28,7 +28,11 @@ int remap_y(int current_y, int y_min, int y_max);
 
 vertex *remap_vertexes(vertex *vertexes, int len, int *map_bounds);
 
-map_renderer *map_renderer_init(engine *e);
+map_renderer *map_renderer_init(engine *e,SDL_Renderer* renderer) ;
+
+void draw_subsector(map_renderer *mr, i16 subsector_id);
+
+void draw_node(map_renderer *mr, int node_id);
 
 void draw(map_renderer *mr);
 

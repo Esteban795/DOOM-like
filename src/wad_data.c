@@ -38,7 +38,7 @@ wad_data *init_wad_data(const char *path) {
 }
 
 void wad_data_free(wad_data *wd) {
-  free(wd->vertexes);
+  // free(wd->vertexes); hidden because it is already freed in remap_vertexes
   free(wd->linedefs);
   free(wd->nodes);
   free(wd->segments);

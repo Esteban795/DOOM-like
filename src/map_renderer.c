@@ -109,7 +109,7 @@ static void draw_vertexes(SDL_Renderer *renderer, vertex *vertexes, int len) {
 }
 
 static void draw_bbox(map_renderer *mr, bbox b, color c) {
-  SDL_SetRenderDrawColor(mr->engine->renderer, c.r, c.g, c.b, 255);
+  SDL_SetRenderDrawColor(mr->renderer, c.r, c.g, c.b, 255);
   i16 x_min = mr->map_bounds.left;
   i16 x_max = mr->map_bounds.right;
   i16 y_min = mr->map_bounds.top;
@@ -119,10 +119,10 @@ static void draw_bbox(map_renderer *mr, bbox b, color c) {
   int w = remap_x(b.right, x_min, x_max) - x;
   int h = remap_y(b.bottom, y_min, y_max) - y;
   SDL_Rect rect = {.x = x, .y = y, .w = w, .h = h};
-  SDL_RenderDrawRect(mr->engine->renderer, &rect);
+  SDL_RenderDrawRect(mr->renderer, &rect);
 }
 
-static void draw_node(map_renderer *mr, int node_id) {
+void draw_node(map_renderer *mr, int node_id) {
   node n = mr->engine->wData->nodes[node_id];
   bbox bbox_front = n.front_bbox;
   bbox bbox_back = n.back_bbox;
@@ -134,26 +134,41 @@ static void draw_node(map_renderer *mr, int node_id) {
                    mr->map_bounds.right);
   i16 y2 = remap_y(n.y_partition + n.dy_partition, mr->map_bounds.top,
                    mr->map_bounds.bottom);
-  SDL_RenderDrawLine(mr->engine->renderer, x1, y1, x2, y2);
+  SDL_RenderDrawLine(mr->renderer, x1, y1, x2, y2);
 }
 
 static void draw_player(map_renderer *mr) {
-  SDL_SetRenderDrawColor(mr->engine->renderer, 0, 0, 255, 255);
+  SDL_SetRenderDrawColor(mr->renderer, 0, 0, 255, 255);
   i16 x = remap_x(mr->engine->p->x, mr->map_bounds.left, mr->map_bounds.right);
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
   SDL_Rect rect = {.x = x, .y = y, .w = 10, .h = 10};
-  SDL_RenderFillRect(mr->engine->renderer, &rect);
+  SDL_RenderFillRect(mr->renderer, &rect);
+}
+
+void draw_segment(map_renderer *mr, segment seg) {
+  vertex v_start = mr->vertexes[seg.start_vertex_id];
+  vertex v_end = mr->vertexes[seg.end_vertex_id];
+  SDL_SetRenderDrawColor(mr->renderer, 255, 255, 255, 255);
+  SDL_RenderDrawLine(mr->renderer, v_start.x, v_start.y, v_end.x,v_end.y);
+  SDL_Delay(25);
+}
+
+void draw_subsector(map_renderer *mr, i16 subsector_id) {
+  subsector ss = mr->wData->subsectors[subsector_id];
+  for (i16 i = 0; i < ss.num_segs; i++) {
+    segment seg = mr->wData->segments[ss.first_seg_id + i];
+    draw_segment(mr, seg);
+  }
+  SDL_RenderPresent(mr->renderer);
 }
 
 void draw(map_renderer *mr) {
-  draw_linedefs(mr->engine->renderer, mr->linedefs, mr->wData->len_linedefs,
-                mr->vertexes);
-  draw_vertexes(mr->engine->renderer, mr->vertexes, mr->wData->len_vertexes);
+  draw_vertexes(mr->renderer, mr->vertexes, mr->wData->len_vertexes);
+  draw_linedefs(mr->renderer, mr->wData->linedefs, mr->wData->len_linedefs, mr->vertexes);
   draw_player(mr);
-  draw_node(mr, mr->engine->bsp->root_node_id);
 }
 
-map_renderer *map_renderer_init(engine *e) {
+map_renderer *map_renderer_init(engine *e,SDL_Renderer* renderer) {
   map_renderer *mr = malloc(sizeof(map_renderer));
   mr->engine = e;
   mr->wData = e->wData;
@@ -165,8 +180,13 @@ map_renderer *map_renderer_init(engine *e) {
                           .bottom = bounds[3],
                           .left = bounds[0],
                           .right = bounds[1]};
+  mr->renderer = renderer;
   free(bounds);
   return mr;
 }
 
-void map_renderer_free(map_renderer *mr) { free(mr); }
+void map_renderer_free(map_renderer *mr) {
+  free(mr->vertexes);
+  SDL_DestroyRenderer(mr->renderer);
+  free(mr);
+}

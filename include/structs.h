@@ -21,7 +21,6 @@ struct Player {
 struct Engine {
   const char *wadPath;
   bool running;
-  SDL_Renderer *renderer;
   wad_data *wData;
   struct Player *p;
   struct BSP *bsp;
@@ -39,6 +38,7 @@ struct BSP {
 
 struct MapRenderer {
   struct Engine *engine;
+  SDL_Renderer *renderer;
   wad_data *wData;
   vertex *vertexes;
   linedef *linedefs;
@@ -57,4 +57,5 @@ struct Color {
 };
 
 typedef struct Color color;
+
 #endif

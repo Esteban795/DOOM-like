@@ -11,8 +11,8 @@ player *player_init(engine *e) {
 }
 
 void update_player(player *p) {
-  p->x += 1;
-  p->y += 1;
+  p->x += 0;
+  p->y += 0;
 }
 
 void player_free(player *p) { free(p); }
