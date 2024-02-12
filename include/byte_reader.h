@@ -1,10 +1,10 @@
 #ifndef BYTE_READER_H
 #define BYTE_READER_H
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
 
 typedef int16_t i16;
 typedef uint16_t u16;
@@ -22,16 +22,15 @@ typedef unsigned char byte;
 #define REJECT 9
 #define BLOCKMAP 10
 
-byte read_1_byte(FILE* f, int offset);
+byte read_1_byte(FILE *f, int offset);
 
-byte* read_bytes(FILE* f,int offset,int num_bytes);
+byte *read_bytes(FILE *f, int offset, int num_bytes);
 
-i16 read_i16(FILE* f, int offset);
+i16 read_i16(FILE *f, int offset);
 
-u16 read_u16(FILE* f, int offset);
+u16 read_u16(FILE *f, int offset);
 
-i32 read_i32(FILE* f,int offset);
+i32 read_i32(FILE *f, int offset);
 
-char* read_string(FILE* f, int offset,int num_bytes);
+char *read_string(FILE *f, int offset, int num_bytes);
 #endif
-

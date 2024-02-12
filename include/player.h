@@ -5,7 +5,7 @@
 
 #define PLAYER_HEIGHT 100;
 
-player* player_init(engine* e);
+player *player_init(engine *e);
 
-void update_player(player* p);
+void update_player(player *p);
 #endif
