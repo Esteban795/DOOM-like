@@ -8,4 +8,6 @@
 player *player_init(engine *e);
 
 void update_player(player *p);
+
+void player_free(player *p);
 #endif

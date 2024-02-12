@@ -6,7 +6,9 @@
 #include "player.h"
 #include "structs.h"
 
-engine *init_engine(const char *wadPath);
+engine *init_engine(const char *wadPath, SDL_Renderer *renderer);
 
 void update_engine(engine *e);
+
+void engine_free(engine *e);
 #endif

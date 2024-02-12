@@ -31,4 +31,6 @@ vertex *remap_vertexes(vertex *vertexes, int len, int *map_bounds);
 map_renderer *map_renderer_init(engine *e);
 
 void draw(map_renderer *mr);
+
+void map_renderer_free(map_renderer *mr);
 #endif

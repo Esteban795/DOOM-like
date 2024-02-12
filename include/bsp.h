@@ -10,4 +10,6 @@ bsp *bsp_init(engine *e, player *p);
 void render_bsp_node(bsp *b, int node_id);
 
 void update_bsp(bsp *b);
+
+void bsp_free(bsp *b);
 #endif

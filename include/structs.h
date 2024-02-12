@@ -22,7 +22,7 @@ struct Engine {
   const char *wadPath;
   bool running;
   SDL_Renderer *renderer;
-  wad_data wData;
+  wad_data *wData;
   struct Player *p;
   struct BSP *bsp;
   struct MapRenderer *map_renderer;
@@ -39,7 +39,7 @@ struct BSP {
 
 struct MapRenderer {
   struct Engine *engine;
-  wad_data wData;
+  wad_data *wData;
   vertex *vertexes;
   linedef *linedefs;
   bbox map_bounds;

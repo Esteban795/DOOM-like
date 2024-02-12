@@ -123,10 +123,10 @@ static void draw_bbox(map_renderer *mr, bbox b, color c) {
 }
 
 static void draw_node(map_renderer *mr, int node_id) {
-  node n = mr->engine->wData.nodes[node_id];
+  node n = mr->engine->wData->nodes[node_id];
   bbox bbox_front = n.front_bbox;
   bbox bbox_back = n.back_bbox;
-  draw_bbox(mr, bbox_front, (color){255, 0, 0});
+  draw_bbox(mr, bbox_front, (color){0, 0, 255});
   draw_bbox(mr, bbox_back, (color){0, 255, 0});
   i16 x1 = remap_x(n.x_partition, mr->map_bounds.left, mr->map_bounds.right);
   i16 y1 = remap_y(n.y_partition, mr->map_bounds.top, mr->map_bounds.bottom);
@@ -146,9 +146,9 @@ static void draw_player(map_renderer *mr) {
 }
 
 void draw(map_renderer *mr) {
-  draw_linedefs(mr->engine->renderer, mr->linedefs, mr->wData.len_linedefs,
+  draw_linedefs(mr->engine->renderer, mr->linedefs, mr->wData->len_linedefs,
                 mr->vertexes);
-  draw_vertexes(mr->engine->renderer, mr->vertexes, mr->wData.len_vertexes);
+  draw_vertexes(mr->engine->renderer, mr->vertexes, mr->wData->len_vertexes);
   draw_player(mr);
   draw_node(mr, mr->engine->bsp->root_node_id);
 }
@@ -157,10 +157,10 @@ map_renderer *map_renderer_init(engine *e) {
   map_renderer *mr = malloc(sizeof(map_renderer));
   mr->engine = e;
   mr->wData = e->wData;
-  int *bounds = get_map_bounds(mr->wData.vertexes, mr->wData.len_vertexes);
+  int *bounds = get_map_bounds(mr->wData->vertexes, mr->wData->len_vertexes);
   mr->vertexes =
-      remap_vertexes(mr->wData.vertexes, mr->wData.len_vertexes, bounds);
-  mr->linedefs = mr->wData.linedefs;
+      remap_vertexes(mr->wData->vertexes, mr->wData->len_vertexes, bounds);
+  mr->linedefs = mr->wData->linedefs;
   mr->map_bounds = (bbox){.top = bounds[2],
                           .bottom = bounds[3],
                           .left = bounds[0],
@@ -168,3 +168,5 @@ map_renderer *map_renderer_init(engine *e) {
   free(bounds);
   return mr;
 }
+
+void map_renderer_free(map_renderer *mr) { free(mr); }
