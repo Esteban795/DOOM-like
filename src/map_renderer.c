@@ -1,4 +1,6 @@
 #include "../include/map_renderer.h"
+#include <SDL2/SDL_render.h>
+
 
 int max(int a, int b) { return a > b ? a : b; }
 
@@ -6,36 +8,36 @@ int min(int a, int b) { return a < b ? a : b; }
 
 // code stolen from the internet, I just needed to draw a circle for the
 // vertexes.
-static void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY,
-                       int32_t radius) {
-  const int32_t diameter = (radius * 2);
-  int32_t x = (radius - 1);
-  int32_t y = 0;
-  int32_t tx = 1;
-  int32_t ty = 1;
-  int32_t error = (tx - diameter);
-  while (x >= y) {
-    //  Each of the following renders an octant of the circle
-    SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
-    SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
-    SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
-    SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
-    SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
-    SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
-    SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
-    SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
-    if (error <= 0) {
-      ++y;
-      error += ty;
-      ty += 2;
-    }
-    if (error > 0) {
-      --x;
-      tx += 2;
-      error += (tx - diameter);
-    }
-  }
-}
+// static void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY,
+//                        int32_t radius) {
+//   const int32_t diameter = (radius * 2);
+//   int32_t x = (radius - 1);
+//   int32_t y = 0;
+//   int32_t tx = 1;
+//   int32_t ty = 1;
+//   int32_t error = (tx - diameter);
+//   while (x >= y) {
+//     //  Each of the following renders an octant of the circle
+//     SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
+//     SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
+//     SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
+//     SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
+//     SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
+//     SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
+//     SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
+//     SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+//     if (error <= 0) {
+//       ++y;
+//       error += ty;
+//       ty += 2;
+//     }
+//     if (error > 0) {
+//       --x;
+//       tx += 2;
+//       error += (tx - diameter);
+//     }
+//   }
+// }
 
 /*
 map_bounds[0] = min_x
@@ -91,22 +93,22 @@ vertex *remap_vertexes(vertex *vertexes, int len, int *map_bounds) {
   return remapped_vertexes;
 }
 
-static void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len,
-                          vertex *vertexes) {
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-  for (int i = 0; i < len; i++) {
-    vertex p1 = vertexes[linedefs[i].start_vertex_id];
-    vertex p2 = vertexes[linedefs[i].end_vertex_id];
-    SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
-  }
-}
+// static void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len,
+//                           vertex *vertexes) {
+//   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+//   for (int i = 0; i < len; i++) {
+//     vertex p1 = vertexes[linedefs[i].start_vertex_id];
+//     vertex p2 = vertexes[linedefs[i].end_vertex_id];
+//     SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
+//   }
+// }
 
-static void draw_vertexes(SDL_Renderer *renderer, vertex *vertexes, int len) {
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-  for (int i = 0; i < len; i++) {
-    DrawCircle(renderer, vertexes[i].x, vertexes[i].y, 5);
-  }
-}
+// static void draw_vertexes(SDL_Renderer *renderer, vertex *vertexes, int len) {
+//   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+//   for (int i = 0; i < len; i++) {
+//     DrawCircle(renderer, vertexes[i].x, vertexes[i].y, 5);
+//   }
+// }
 
 static void draw_bbox(map_renderer *mr, bbox b, color c) {
   SDL_SetRenderDrawColor(mr->renderer, c.r, c.g, c.b, 255);
@@ -143,6 +145,7 @@ static void draw_player(map_renderer *mr) {
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
   SDL_Rect rect = {.x = x, .y = y, .w = 10, .h = 10};
   SDL_RenderFillRect(mr->renderer, &rect);
+  SDL_RenderDrawLine(mr->renderer, x, y, x + 50 * cos(deg_to_rad(mr->engine->p->angle)),y + 50 * sin(deg_to_rad(mr->engine->p->angle)));
 }
 
 void draw_segment(map_renderer *mr, segment seg) {
@@ -150,7 +153,6 @@ void draw_segment(map_renderer *mr, segment seg) {
   vertex v_end = mr->vertexes[seg.end_vertex_id];
   SDL_SetRenderDrawColor(mr->renderer, 255, 255, 255, 255);
   SDL_RenderDrawLine(mr->renderer, v_start.x, v_start.y, v_end.x,v_end.y);
-  SDL_Delay(25);
 }
 
 void draw_subsector(map_renderer *mr, i16 subsector_id) {
@@ -159,12 +161,12 @@ void draw_subsector(map_renderer *mr, i16 subsector_id) {
     segment seg = mr->wData->segments[ss.first_seg_id + i];
     draw_segment(mr, seg);
   }
-  SDL_RenderPresent(mr->renderer);
+  //SDL_RenderPresent(mr->renderer);
 }
 
 void draw(map_renderer *mr) {
-  draw_vertexes(mr->renderer, mr->vertexes, mr->wData->len_vertexes);
-  draw_linedefs(mr->renderer, mr->wData->linedefs, mr->wData->len_linedefs, mr->vertexes);
+  // draw_vertexes(mr->renderer, mr->vertexes, mr->wData->len_vertexes);
+  // draw_linedefs(mr->renderer, mr->wData->linedefs, mr->wData->len_linedefs, mr->vertexes);
   draw_player(mr);
 }
 

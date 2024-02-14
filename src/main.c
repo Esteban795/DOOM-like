@@ -25,27 +25,9 @@ int main(void) {
     exit(-1);
   }
   engine *e = init_engine("maps/DOOM1.WAD", renderer);
-  SDL_Event ev;
   while (e->running) {
-    SDL_PollEvent(&ev);
-    switch (ev.type) {
-      case SDL_QUIT:
-        e->running = false;
-        break;
-      case SDL_KEYDOWN:
-        switch (ev.key.keysym.sym) {
-        case SDLK_ESCAPE:
-          e->running = false;
-          break;
-        case SDLK_q:
-          e->running = false;
-        default:
-          break;
-        }
-      default:
-        break;
-    }
-    update_engine(e);
+    int res = update_engine(e);
+    if (res == 1) break;
     SDL_Delay(DT);
   }
   engine_free(e);

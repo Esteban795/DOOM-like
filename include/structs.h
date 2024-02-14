@@ -13,9 +13,9 @@ struct MapRenderer;
 struct Player {
   struct Engine *engine;
   thing thing;
-  i16 x;
-  i16 y;
-  i16 angle;
+  double x;
+  double y;
+  double angle;
 };
 
 struct Engine {

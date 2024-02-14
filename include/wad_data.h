@@ -13,7 +13,7 @@
 #include "thing.h"
 #include "vertex.h"
 
-#define DT 1 / 60
+#define DT 2
 
 struct WADData {
   header header;

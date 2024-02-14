@@ -5,6 +5,8 @@
 
 #include "structs.h"
 #include "vertex.h"
+#include "player.h"
+
 
 #define RES_W 320
 #define RES_H 200
