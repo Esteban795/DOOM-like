@@ -28,20 +28,20 @@ void update_player(player *p,bool* vec) {
   double speed = DT * PLAYER_SPEED;
   double rot_speed = PLAYER_ROTATION_SPEED * DT;
   if (keydown_z) {
-    p->x += speed * sin(deg_to_rad(p->angle + 90.0));
-    p->y += speed * cos(deg_to_rad(p->angle + 90.0));
+    p->x += speed * cos(deg_to_rad(p->angle));
+    p->y -= speed * sin(deg_to_rad(p->angle));
   }
   if (keydown_s) {
-    p->x += speed * sin(deg_to_rad(p->angle - 90.0));
-    p->y += speed * cos(deg_to_rad(p->angle - 90.0));
+    p->x -= speed * cos(deg_to_rad(p->angle));
+    p->y += speed * sin(deg_to_rad(p->angle));
   }
   if (keydown_q) {
     p->x += speed * sin(deg_to_rad(p->angle));
     p->y += speed * cos(deg_to_rad(p->angle));
   }
   if (keydown_d) {
-    p->x += speed * sin(deg_to_rad(p->angle + 180.0));
-    p->y += speed * cos(deg_to_rad(p->angle + 180.0));
+    p->x -= speed * sin(deg_to_rad(p->angle));
+    p->y -= speed * cos(deg_to_rad(p->angle));
   }
   if (keydown_left) {
     p->angle -= rot_speed;
