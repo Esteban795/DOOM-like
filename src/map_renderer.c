@@ -10,36 +10,36 @@ int min(int a, int b) { return a < b ? a : b; }
 
 // code stolen from the internet, I just needed to draw a circle for the
 // vertexes.
-// static void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY,
-//                        int32_t radius) {
-//   const int32_t diameter = (radius * 2);
-//   int32_t x = (radius - 1);
-//   int32_t y = 0;
-//   int32_t tx = 1;
-//   int32_t ty = 1;
-//   int32_t error = (tx - diameter);
-//   while (x >= y) {
-//     //  Each of the following renders an octant of the circle
-//     SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
-//     SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
-//     SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
-//     SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
-//     SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
-//     SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
-//     SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
-//     SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
-//     if (error <= 0) {
-//       ++y;
-//       error += ty;
-//       ty += 2;
-//     }
-//     if (error > 0) {
-//       --x;
-//       tx += 2;
-//       error += (tx - diameter);
-//     }
-//   }
-// }
+static void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY,
+                       int32_t radius) {
+  const int32_t diameter = (radius * 2);
+  int32_t x = (radius - 1);
+  int32_t y = 0;
+  int32_t tx = 1;
+  int32_t ty = 1;
+  int32_t error = (tx - diameter);
+  while (x >= y) {
+    //  Each of the following renders an octant of the circle
+    SDL_RenderDrawPoint(renderer, centreX + x, centreY - y);
+    SDL_RenderDrawPoint(renderer, centreX + x, centreY + y);
+    SDL_RenderDrawPoint(renderer, centreX - x, centreY - y);
+    SDL_RenderDrawPoint(renderer, centreX - x, centreY + y);
+    SDL_RenderDrawPoint(renderer, centreX + y, centreY - x);
+    SDL_RenderDrawPoint(renderer, centreX + y, centreY + x);
+    SDL_RenderDrawPoint(renderer, centreX - y, centreY - x);
+    SDL_RenderDrawPoint(renderer, centreX - y, centreY + x);
+    if (error <= 0) {
+      ++y;
+      error += ty;
+      ty += 2;
+    }
+    if (error > 0) {
+      --x;
+      tx += 2;
+      error += (tx - diameter);
+    }
+  }
+}
 
 /*
 map_bounds[0] = min_x
@@ -145,12 +145,13 @@ static void draw_player(map_renderer *mr) {
   SDL_SetRenderDrawColor(mr->renderer, 0, 0, 255, 255);
   i16 x = remap_x(mr->engine->p->x, mr->map_bounds.left, mr->map_bounds.right);
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
-  SDL_Rect rect = {.x = x, .y = y, .w = 10, .h = 10};
-  SDL_RenderFillRect(mr->renderer, &rect);
+  int radius = 25;
+  i16 x_center = x + radius;
+  i16 y_center = y + radius;
+  DrawCircle(mr->renderer,x_center, y, radius);
   // draw fov
-  SDL_RenderDrawLine(mr->renderer, x + 5, y + 5, x + 50 * cos(deg_to_rad(mr->engine->p->angle + H_FOV)),y + 50 * sin(deg_to_rad(mr->engine->p->angle + H_FOV)));
-  SDL_RenderDrawLine(mr->renderer, x + 5, y + 5, x + 50 * cos(deg_to_rad(mr->engine->p->angle - H_FOV)),y + 50 * sin(deg_to_rad(mr->engine->p->angle - H_FOV)));
-  // SDL_RenderDrawLine(mr->renderer, x + 5, y + 5, x + 50 * cos(deg_to_rad(mr->engine->p->angle)),y + 50 * sin(deg_to_rad(mr->engine->p->angle)));
+  SDL_RenderDrawLine(mr->renderer, x_center, y, x + 200 * cos(deg_to_rad(mr->engine->p->angle + H_FOV)),y + 200 * sin(deg_to_rad(mr->engine->p->angle + H_FOV)));
+  SDL_RenderDrawLine(mr->renderer, x_center, y, x + 200 * cos(deg_to_rad(mr->engine->p->angle - H_FOV)),y + 200 * sin(deg_to_rad(mr->engine->p->angle - H_FOV)));
 }
 
 void draw_segment(map_renderer *mr, segment seg) {

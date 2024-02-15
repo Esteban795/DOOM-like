@@ -35,10 +35,12 @@ engine *init_engine(const char *wadPath, SDL_Renderer *renderer) {
   e->p = player_init(e);
   e->bsp = bsp_init(e, e->p);
   e->map_renderer = map_renderer_init(e,renderer);
+  e->keys = SDL_GetKeyboardState(e->numkeys);
   return e;
 }
 
 int update_engine(engine *e) {
+  SDL_PumpEvents();
   bool* vec = events_handling(e);
   if (vec == NULL) {
     e->running = false;
@@ -47,6 +49,7 @@ int update_engine(engine *e) {
   }
   SDL_SetRenderDrawColor(e->map_renderer->renderer, 0, 0, 0, 255);
   SDL_RenderClear(e->map_renderer->renderer);
+  
   update_player(e->p,vec);
   update_bsp(e->bsp);
   draw(e->map_renderer);
