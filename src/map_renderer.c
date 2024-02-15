@@ -1,6 +1,8 @@
 #include "../include/map_renderer.h"
 #include <SDL2/SDL_render.h>
 
+#define FOV 90
+#define H_FOV (FOV / 2)
 
 int max(int a, int b) { return a > b ? a : b; }
 
@@ -145,7 +147,10 @@ static void draw_player(map_renderer *mr) {
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
   SDL_Rect rect = {.x = x, .y = y, .w = 10, .h = 10};
   SDL_RenderFillRect(mr->renderer, &rect);
-  SDL_RenderDrawLine(mr->renderer, x, y, x + 50 * cos(deg_to_rad(mr->engine->p->angle)),y + 50 * sin(deg_to_rad(mr->engine->p->angle)));
+  // draw fov
+  SDL_RenderDrawLine(mr->renderer, x + 5, y + 5, x + 50 * cos(deg_to_rad(mr->engine->p->angle + H_FOV)),y + 50 * sin(deg_to_rad(mr->engine->p->angle + H_FOV)));
+  SDL_RenderDrawLine(mr->renderer, x + 5, y + 5, x + 50 * cos(deg_to_rad(mr->engine->p->angle - H_FOV)),y + 50 * sin(deg_to_rad(mr->engine->p->angle - H_FOV)));
+  // SDL_RenderDrawLine(mr->renderer, x + 5, y + 5, x + 50 * cos(deg_to_rad(mr->engine->p->angle)),y + 50 * sin(deg_to_rad(mr->engine->p->angle)));
 }
 
 void draw_segment(map_renderer *mr, segment seg) {
