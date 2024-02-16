@@ -23,22 +23,34 @@ void update_player(player *p,int mouse_x,const uint8_t* keyboard_state,int numke
   double speed = DT * PLAYER_SPEED;
   double rot_speed = PLAYER_ROTATION_SPEED * DT;
   double vec[2] = {0.0, 0.0};
+  int count_dir = 0;
+  int count_strafe = 0;
   if (keydown_z) {
     vec[0] += speed * cos(deg_to_rad(p->angle));
     vec[1] -= speed * sin(deg_to_rad(p->angle));
+    count_dir++;
   }
   if (keydown_s) {
     vec[0] -= speed * cos(deg_to_rad(p->angle));
     vec[1] += speed * sin(deg_to_rad(p->angle));
+    count_dir++;
   }
   if (keydown_q) {
     vec[0] += speed * sin(deg_to_rad(p->angle));
     vec[1] += speed * cos(deg_to_rad(p->angle));
+    count_strafe++;
   }
   if (keydown_d) {
     vec[0] -= speed * sin(deg_to_rad(p->angle));
     vec[1] -= speed * cos(deg_to_rad(p->angle));
+    count_strafe++;
   }
+  if (count_dir && count_strafe) {
+    vec[0] *= DIAGONAL_CORRECTION;
+    vec[1] *= DIAGONAL_CORRECTION;
+  }
+  p->x += vec[0];
+  p->y += vec[1];
   p->angle += rot_speed * mouse_x;
   p->angle = fmod(p->angle, 360);
   p->angle = p->angle < 0 ? 360 + p->angle : p->angle;
