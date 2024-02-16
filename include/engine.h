@@ -6,10 +6,7 @@
 #include "player.h"
 #include "structs.h"
 
-#define PLAYER_SPEED 2
-#define PLAYER_ROTATION_SPEED 2
-
-engine *init_engine(const char *wadPath, SDL_Renderer *renderer);
+engine *init_engine(const char *wadPath, SDL_Renderer *renderer, int numkeys, const uint8_t *keys);
 
 int update_engine(engine *e);
 

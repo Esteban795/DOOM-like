@@ -1,8 +1,8 @@
 #include "../include/map_renderer.h"
 #include <SDL2/SDL_render.h>
 
-#define FOV 90
-#define H_FOV (FOV / 2)
+#define FOV 90.0
+#define H_FOV (FOV / 2.0)
 
 int max(int a, int b) { return a > b ? a : b; }
 
@@ -147,7 +147,6 @@ static void draw_player(map_renderer *mr) {
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
   int radius = 25;
   i16 x_center = x + radius;
-  i16 y_center = y + radius;
   DrawCircle(mr->renderer,x_center, y, radius);
   // draw fov
   SDL_RenderDrawLine(mr->renderer, x_center, y, x + 200 * cos(deg_to_rad(mr->engine->p->angle + H_FOV)),y + 200 * sin(deg_to_rad(mr->engine->p->angle + H_FOV)));

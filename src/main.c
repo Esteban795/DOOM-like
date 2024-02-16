@@ -19,6 +19,8 @@ int start_SDL(SDL_Window **window, SDL_Renderer **renderer, int width,
 int main(void) {
   SDL_Window *window;
   SDL_Renderer *renderer;
+  int numkeys;
+  const uint8_t* keys = SDL_GetKeyboardState(&numkeys);
   int status = start_SDL(&window, &renderer, WIDTH, HEIGHT, "Map rendering..");
   if (status == 1) {
     printf("Error at SDL startup");
@@ -26,7 +28,7 @@ int main(void) {
   }
   uint64_t now;
   uint64_t old = SDL_GetTicks64();
-  engine *e = init_engine("maps/DOOM1.WAD", renderer);
+  engine *e = init_engine("maps/DOOM1.WAD", renderer,numkeys,keys);
   while (e->running) {
     now = SDL_GetTicks64();
     int res = update_engine(e);
