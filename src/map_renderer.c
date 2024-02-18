@@ -95,17 +95,18 @@ vertex *remap_vertexes(vertex *vertexes, int len, int *map_bounds) {
   return remapped_vertexes;
 }
 
-// static void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len,
-//                           vertex *vertexes) {
-//   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-//   for (int i = 0; i < len; i++) {
-//     vertex p1 = vertexes[linedefs[i].start_vertex_id];
-//     vertex p2 = vertexes[linedefs[i].end_vertex_id];
-//     SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
-//   }
-// }
+void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len,
+                   vertex *vertexes) {
+  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+  for (int i = 0; i < len; i++) {
+    vertex p1 = vertexes[linedefs[i].start_vertex_id];
+    vertex p2 = vertexes[linedefs[i].end_vertex_id];
+    SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
+  }
+}
 
-// static void draw_vertexes(SDL_Renderer *renderer, vertex *vertexes, int len) {
+// static void draw_vertexes(SDL_Renderer *renderer, vertex *vertexes, int len)
+// {
 //   SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 //   for (int i = 0; i < len; i++) {
 //     DrawCircle(renderer, vertexes[i].x, vertexes[i].y, 5);
@@ -146,36 +147,51 @@ static void draw_player(map_renderer *mr) {
   i16 x = remap_x(mr->engine->p->x, mr->map_bounds.left, mr->map_bounds.right);
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
   int radius = 25;
-  i16 x_center = x + radius;
-  DrawCircle(mr->renderer,x_center, y, radius);
-  // draw fov
-  SDL_RenderDrawLine(mr->renderer, x_center, y, x + 200 * cos(deg_to_rad(mr->engine->p->angle + H_FOV)),y + 200 * sin(deg_to_rad(mr->engine->p->angle + H_FOV)));
-  SDL_RenderDrawLine(mr->renderer, x_center, y, x + 200 * cos(deg_to_rad(mr->engine->p->angle - H_FOV)),y + 200 * sin(deg_to_rad(mr->engine->p->angle - H_FOV)));
+  DrawCircle(mr->renderer, x, y, radius);
+  DrawCircle(mr->renderer, x, y, 200);
 }
 
 void draw_segment(map_renderer *mr, segment seg) {
   vertex v_start = mr->vertexes[seg.start_vertex_id];
   vertex v_end = mr->vertexes[seg.end_vertex_id];
-  SDL_SetRenderDrawColor(mr->renderer, 255, 255, 255, 255);
-  SDL_RenderDrawLine(mr->renderer, v_start.x, v_start.y, v_end.x,v_end.y);
+  SDL_RenderDrawLine(mr->renderer, v_start.x, v_start.y, v_end.x, v_end.y);
 }
 
 void draw_subsector(map_renderer *mr, i16 subsector_id) {
   subsector ss = mr->wData->subsectors[subsector_id];
+  SDL_SetRenderDrawColor(mr->renderer, 0, 255, 0, 255);
   for (i16 i = 0; i < ss.num_segs; i++) {
     segment seg = mr->wData->segments[ss.first_seg_id + i];
     draw_segment(mr, seg);
   }
-  //SDL_RenderPresent(mr->renderer);
+}
+
+void draw_fov(map_renderer *mr) {
+  const int RAY_LENGTH = 200;
+  int x = remap_x(mr->engine->p->x, mr->map_bounds.left, mr->map_bounds.right);
+  int y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
+  int x1 = x + RAY_LENGTH * cos(deg_to_rad(mr->engine->p->angle + H_FOV));
+  int y1 = y + RAY_LENGTH * sin(deg_to_rad(mr->engine->p->angle + H_FOV));
+  int x2 = x + RAY_LENGTH * cos(deg_to_rad(mr->engine->p->angle - H_FOV));
+  int y2 = y + RAY_LENGTH * sin(deg_to_rad(mr->engine->p->angle - H_FOV));
+  int x3 = x + RAY_LENGTH * cos(deg_to_rad(mr->engine->p->angle));
+  int y3 = y + RAY_LENGTH * sin(deg_to_rad(mr->engine->p->angle));
+  SDL_SetRenderDrawColor(mr->renderer, 0, 120, 255, 255);
+  SDL_RenderDrawLine(mr->renderer, x, y, x1, y1);
+  SDL_RenderDrawLine(mr->renderer, x, y, x2, y2);
+  SDL_SetRenderDrawColor(mr->renderer, 255, 0, 0, 255);
+  SDL_RenderDrawLine(mr->renderer, x, y, x3, y3);
 }
 
 void draw(map_renderer *mr) {
   // draw_vertexes(mr->renderer, mr->vertexes, mr->wData->len_vertexes);
-  // draw_linedefs(mr->renderer, mr->wData->linedefs, mr->wData->len_linedefs, mr->vertexes);
+  // draw_linedefs(mr->renderer, mr->wData->linedefs, mr->wData->len_linedefs,
+  // mr->vertexes);
   draw_player(mr);
+  draw_fov(mr);
 }
 
-map_renderer *map_renderer_init(engine *e,SDL_Renderer* renderer) {
+map_renderer *map_renderer_init(engine *e, SDL_Renderer *renderer) {
   map_renderer *mr = malloc(sizeof(map_renderer));
   mr->engine = e;
   mr->wData = e->wData;

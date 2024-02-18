@@ -3,6 +3,7 @@
 
 #include "map_renderer.h"
 #include "structs.h"
+#include "vec2.h"
 
 #define SUBSECTOR_IDENTIFIER (size_t)0x8000
 

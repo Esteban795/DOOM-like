@@ -11,11 +11,11 @@ player *player_init(engine *e) {
   p->thing = e->wData->things[0];
   p->x = (double)p->thing.x;
   p->y = (double)p->thing.y;
-  p->angle = (double)0.0;
+  p->angle = (double)p->thing.angle;
   return p;
 }
 
-void update_player(player *p,int mouse_x,const uint8_t* keyboard_state,int numkeys) {
+void update_player(player *p, int mouse_x, const uint8_t *keyboard_state) {
   bool keydown_z = keyboard_state[SDL_SCANCODE_W];
   bool keydown_q = keyboard_state[SDL_SCANCODE_A];
   bool keydown_s = keyboard_state[SDL_SCANCODE_S];
