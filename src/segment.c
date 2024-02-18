@@ -1,10 +1,16 @@
 #include "../include/segment.h"
+#include <stdio.h>
+
+double bams_to_degrees(i16 bams){
+  return (double)bams * 180.0 / 65536.0;
+}
 
 segment read_segment(FILE *f, int offset) {
   segment s;
   s.start_vertex_id = read_i16(f, offset);
   s.end_vertex_id = read_i16(f, offset + 2);
-  s.angle = read_i16(f, offset + 4);
+  s.angle = bams_to_degrees(read_i16(f, offset + 4));
+  s.angle = s.angle < 0 ? 360.0 + s.angle : s.angle;
   s.linedef_id = read_i16(f, offset + 6);
   s.direction = read_i16(f, offset + 8);
   s.offset = read_i16(f, offset + 10);

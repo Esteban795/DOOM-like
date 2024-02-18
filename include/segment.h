@@ -8,7 +8,7 @@
 struct Segment {
   i16 start_vertex_id;
   i16 end_vertex_id;
-  i16 angle;
+  double angle;
   i16 linedef_id;
   i16 direction;
   i16 offset;
