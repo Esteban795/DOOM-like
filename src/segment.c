@@ -2,7 +2,8 @@
 #include <stdio.h>
 
 double bams_to_degrees(i16 bams){
-  return (double)bams * 180.0 / 65536.0;
+  double res = ((double)bams) * 180.0 / 65536.0;
+  return res < 0 ? 360 + res : res;
 }
 
 segment read_segment(FILE *f, int offset) {

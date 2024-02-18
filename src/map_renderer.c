@@ -91,7 +91,6 @@ vertex *remap_vertexes(vertex *vertexes, int len, int *map_bounds) {
     remapped_vertexes[i].y =
         remap_y(vertexes[i].y, map_bounds[2], map_bounds[3]);
   }
-  free(vertexes); // forget the old vertexes
   return remapped_vertexes;
 }
 
@@ -146,9 +145,7 @@ static void draw_player(map_renderer *mr) {
   SDL_SetRenderDrawColor(mr->renderer, 0, 0, 255, 255);
   i16 x = remap_x(mr->engine->p->x, mr->map_bounds.left, mr->map_bounds.right);
   i16 y = remap_y(mr->engine->p->y, mr->map_bounds.top, mr->map_bounds.bottom);
-  int radius = 25;
-  DrawCircle(mr->renderer, x, y, radius);
-  DrawCircle(mr->renderer, x, y, 200);
+  DrawCircle(mr->renderer, x, y, 5);
 }
 
 void draw_segment(map_renderer *mr, segment seg) {

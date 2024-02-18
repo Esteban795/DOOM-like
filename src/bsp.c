@@ -112,6 +112,31 @@ static bool check_if_bbox_visible(bbox bb, player *p) {
   return false;
 }
 
+vertex get_vertex_from_segment(engine* e,i16 vertex_id){
+  return e->wData->vertexes[vertex_id];
+}
+
+bool is_segment_in_fov(player* p,segment seg){
+  vec2 player = {.x = p->x, .y = p->y};
+  vertex v1 = get_vertex_from_segment(p->engine, seg.start_vertex_id);
+  vertex v2 = get_vertex_from_segment(p->engine, seg.end_vertex_id);
+  vec2 v1v = {.x = v1.x, .y = v1.y};
+  vec2 v2v = {.x = v2.x, .y = v2.y};
+  double angle1 = point_to_angle(player, v1v);
+  double angle2 = point_to_angle(player, v2v);
+  double span = norm(angle1 - angle2);
+  bool res = span >= 180.0 ? false : true;
+  if (res) {
+    angle1 += p->angle;
+    double span1 = norm(angle1 + HALF_FOV);
+    if (span1 > FOV) {
+      if (span1 >= span + FOV)
+        return false;
+    }
+  }
+  return res;
+}
+
 static bool is_on_back_side(bsp *b, node n) {
   i16 dx = b->player->x - n.x_partition;
   i16 dy = b->player->y - n.y_partition;
@@ -121,7 +146,14 @@ static bool is_on_back_side(bsp *b, node n) {
 void render_bsp_node(bsp *b, size_t node_id) {
   if (node_id > SUBSECTOR_IDENTIFIER) {
     i16 subsector_id = node_id - SUBSECTOR_IDENTIFIER;
-    draw_subsector(b->engine->map_renderer, subsector_id);
+    subsector ss = b->engine->wData->subsectors[subsector_id];
+    SDL_SetRenderDrawColor(b->engine->map_renderer->renderer, 0, 255, 0, 255);
+    for (i16 i = 0; i < ss.num_segs; i++) {
+      segment seg = b->engine->wData->segments[ss.first_seg_id + i];
+      if (is_segment_in_fov(b->player, seg)) {
+        draw_segment(b->engine->map_renderer, seg);
+      }
+    }
   } else {
     node n = b->nodes[node_id];
     bool is_back_side = is_on_back_side(b, n);
