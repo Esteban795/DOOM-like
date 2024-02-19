@@ -32,7 +32,7 @@ i16 read_i16(FILE *f, int offset) {
 
 u16 read_u16(FILE *f, int offset) {
   byte *bytes = read_bytes(f, offset, 2);
-  i16 temp = 0;
+  u16 temp = 0;
   temp = bytes[1] << 8;
   temp |= bytes[0];
   free(bytes);
