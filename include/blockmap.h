@@ -1,14 +1,18 @@
 #ifndef BLOCKMAP_H
 #define BLOCKMAP_H
 
-#define BLOCKMAP_START 0x0000
-#define BLOCKMAP_END 0xFFFF
 
 #include "byte_reader.h"
 #include "linedef.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+
+#define BLOCK_START ((int16_t)0x0000)
+#define BLOCK_END ((int16_t)0xFFFF)
+
+
 
 struct Block {
     linedef* linedefs;
@@ -34,4 +38,7 @@ struct Blockmap {
 
 typedef struct Blockmap blockmap;
 
+blockmap* read_blockmap_from_lump(FILE* f,lump* directory,int lump_index,linedef* linedefs);
+
+void blockmap_free(blockmap* bm);
 #endif

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "blockmap.h"
 #include "header.h"
 #include "linedef.h"
 #include "node.h"
@@ -25,6 +26,7 @@ struct WADData {
   subsector *subsectors;
   segment *segments;
   thing *things;
+  blockmap *blockmap;
   int len_vertexes;
   int len_linedefs;
   int len_nodes;

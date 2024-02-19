@@ -1,4 +1,5 @@
 #include "../include/wad_data.h"
+#include <stdio.h>
 
 wad_data *init_wad_data(const char *path) {
   FILE *file = fopen(path, "rb");
@@ -34,6 +35,9 @@ wad_data *init_wad_data(const char *path) {
       file, wd->directory, wd->map_index + SEGS, 12, 0, wd->len_segments);
   wd->things = get_things_from_lump(file, wd->directory, wd->map_index + THINGS,
                                     10, 0, wd->len_things);
+  printf("Blockmap offset: %d\n", wd->map_index + BLOCKMAP);
+  wd->blockmap = read_blockmap_from_lump(file, wd->directory,
+                                         wd->map_index + BLOCKMAP, wd->linedefs);
   return wd;
 }
 
@@ -45,6 +49,7 @@ void wad_data_free(wad_data *wd) {
   free(wd->subsectors);
   free(wd->things);
   free(wd->header.wad_type);
+  blockmap_free(wd->blockmap);
   for (int i = 0; i < wd->header.lump_count; i++) {
     free(wd->directory[i].lump_name);
   }
