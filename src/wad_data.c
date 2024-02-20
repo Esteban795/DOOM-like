@@ -35,9 +35,8 @@ wad_data *init_wad_data(const char *path) {
       file, wd->directory, wd->map_index + SEGS, 12, 0, wd->len_segments);
   wd->things = get_things_from_lump(file, wd->directory, wd->map_index + THINGS,
                                     10, 0, wd->len_things);
-  printf("Blockmap offset: %d\n", wd->map_index + BLOCKMAP);
-  wd->blockmap = read_blockmap_from_lump(file, wd->directory,
-                                         wd->map_index + BLOCKMAP, wd->linedefs);
+  wd->blockmap = read_blockmap_from_lump(
+      file, wd->directory, wd->map_index + BLOCKMAP, wd->linedefs);
   return wd;
 }
 
