@@ -8,6 +8,11 @@ int max(int a, int b) { return a > b ? a : b; }
 
 int min(int a, int b) { return a < b ? a : b; }
 
+color get_random_color(i16 seed) {
+  srand(seed);
+  return (color){.r = rand() % 255, .g = rand() % 255, .b = rand() % 255};
+}
+
 // code stolen from the internet, I just needed to draw a circle for the
 // vertexes.
 static void DrawCircle(SDL_Renderer *renderer, int32_t centreX, int32_t centreY,
@@ -163,6 +168,13 @@ void draw_subsector(map_renderer *mr, i16 subsector_id) {
   }
 }
 
+void draw_vertical_lines(map_renderer *mr, int x1, int x2, i16 subsector_id) {
+  color c = get_random_color(subsector_id);
+  SDL_SetRenderDrawColor(mr->renderer, c.r, c.g, c.b, 255);
+  SDL_RenderDrawLine(mr->renderer, x1, 0, x1, HEIGHT);
+  SDL_RenderDrawLine(mr->renderer, x2, 0, x2, HEIGHT);
+}
+
 void draw_fov(map_renderer *mr) {
   const int RAY_LENGTH = 200;
   int x = remap_x(mr->engine->p->x, mr->map_bounds.left, mr->map_bounds.right);
@@ -184,8 +196,8 @@ void draw(map_renderer *mr) {
   // draw_vertexes(mr->renderer, mr->vertexes, mr->wData->len_vertexes);
   // draw_linedefs(mr->renderer, mr->wData->linedefs, mr->wData->len_linedefs,
   // mr->vertexes);
-  draw_player(mr);
-  draw_fov(mr);
+  // draw_player(mr);
+  // draw_fov(mr);
 }
 
 map_renderer *map_renderer_init(engine *e, SDL_Renderer *renderer) {

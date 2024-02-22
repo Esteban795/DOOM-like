@@ -6,6 +6,13 @@
 
 double rad_to_deg(double rad) { return rad * (180 / M_PI); }
 
+int angle_to_x_pos(double angle){
+  if (angle > 0) {
+    return (int)(SCREEN_DISTANCE - tan(deg_to_rad(angle)) * (double)WIDTH / 2);
+  } else {
+    return (int)(tan(deg_to_rad(angle)) * (double)WIDTH / 2 + SCREEN_DISTANCE);
+  }
+}
 bsp *bsp_init(engine *e, player *p) {
   bsp *b = malloc(sizeof(bsp));
   b->engine = e;
@@ -116,7 +123,7 @@ vertex get_vertex_from_segment(engine* e,i16 vertex_id){
   return e->wData->vertexes[vertex_id];
 }
 
-bool is_segment_in_fov(player* p,segment seg){
+bool is_segment_in_fov(player* p,segment seg,int* x1,int* x2){
   vec2 player = {.x = p->x, .y = p->y};
   vertex v1 = get_vertex_from_segment(p->engine, seg.start_vertex_id);
   vertex v2 = get_vertex_from_segment(p->engine, seg.end_vertex_id);
@@ -125,16 +132,25 @@ bool is_segment_in_fov(player* p,segment seg){
   double angle1 = point_to_angle(player, v1v);
   double angle2 = point_to_angle(player, v2v);
   double span = norm(angle1 - angle2);
-  bool res = span >= 180.0 ? false : true;
-  if (res) {
-    angle1 += p->angle;
-    double span1 = norm(angle1 + HALF_FOV);
-    if (span1 > FOV) {
-      if (span1 >= span + FOV)
-        return false;
-    }
+  if (span >= 180.0) return false;
+  angle1 += p->angle;
+  angle2 += p->angle;
+  double span1 = norm(angle1 + HALF_FOV);
+  if (span1 > FOV) {
+    if (span1 >= span + FOV)
+      return false;
+    // used for clipping walls
+    angle1 = -HALF_FOV;
   }
-  return res;
+  double span2 = norm(HALF_FOV - angle2);
+  if (span2 > FOV) {
+    if (span2 >= span + FOV)
+      return false;
+    angle2 = HALF_FOV;
+  }
+  *x1 = angle_to_x_pos(angle1);
+  *x2 = angle_to_x_pos(angle2);
+  return true;
 }
 
 static bool is_on_back_side(bsp *b, node n) {
@@ -148,10 +164,11 @@ void render_bsp_node(bsp *b, size_t node_id) {
     i16 subsector_id = node_id - SUBSECTOR_IDENTIFIER;
     subsector ss = b->engine->wData->subsectors[subsector_id];
     SDL_SetRenderDrawColor(b->engine->map_renderer->renderer, 0, 255, 0, 255);
+    int x1, x2;
     for (i16 i = 0; i < ss.num_segs; i++) {
       segment seg = b->engine->wData->segments[ss.first_seg_id + i];
-      if (is_segment_in_fov(b->player, seg)) {
-        draw_segment(b->engine->map_renderer, seg);
+      if (is_segment_in_fov(b->player, seg, &x1, &x2)) {
+        draw_vertical_lines(b->engine->map_renderer, x1, x2, subsector_id);
       }
     }
   } else {

@@ -6,7 +6,7 @@
 #include "structs.h"
 
 #define PLAYER_HEIGHT 100;
-#define PLAYER_SPEED .12
+#define PLAYER_SPEED .05
 #define PLAYER_ROTATION_SPEED .03
 #define MOUSE_SENSITIVY 0.3
 #define DIAGONAL_CORRECTION 1/sqrt(2)

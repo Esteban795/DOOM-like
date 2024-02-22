@@ -11,7 +11,7 @@ player *player_init(engine *e) {
   p->thing = e->wData->things[0];
   p->x = (double)p->thing.x;
   p->y = (double)p->thing.y;
-  p->angle = (double)p->thing.angle;
+  p->angle = (double)-p->thing.angle;
   return p;
 }
 
