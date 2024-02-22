@@ -30,7 +30,7 @@ wad_data *init_wad_data(const char *path) {
   wd->vertexes = get_vertexes_from_lump(
       file, wd->directory, wd->map_index + VERTEXES, 4, 0, wd->len_vertexes);
   wd->linedefs = get_linedefs_from_lump(
-      file, wd->directory, wd->map_index + LINEDEFS, 14, 0, wd->len_linedefs);
+      file, wd->directory, wd->map_index + LINEDEFS, 14, 0, wd->len_linedefs,wd->vertexes);
   wd->nodes = get_nodes_from_lump(file, wd->directory, wd->map_index + NODES,
                                   28, 0, wd->len_nodes);
   wd->subsectors = get_subsectors_from_lump(
