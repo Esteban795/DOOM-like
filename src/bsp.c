@@ -6,6 +6,10 @@
 
 double rad_to_deg(double rad) { return rad * (180 / M_PI); }
 
+/*
+Project point coordinate in SCREEN_DISTANCE, according to the angle
+they form with player's POV
+*/
 int angle_to_x_pos(double angle){
   if (angle > 0) {
     return (int)(SCREEN_DISTANCE - tan(deg_to_rad(angle)) * (double)WIDTH / 2);
@@ -13,6 +17,15 @@ int angle_to_x_pos(double angle){
     return (int)(tan(deg_to_rad(angle)) * (double)WIDTH / 2 + SCREEN_DISTANCE);
   }
 }
+
+/* 
+Get the angle from p1 to p2
+*/
+double point_to_angle(vec2 p1, vec2 p2) {
+  vec2 delta = {p2.x - p1.x, p2.y - p1.y};
+  return rad_to_deg(atan2(delta.y, delta.x));
+}
+
 bsp *bsp_init(engine *e, player *p) {
   bsp *b = malloc(sizeof(bsp));
   b->engine = e;
@@ -24,12 +37,8 @@ bsp *bsp_init(engine *e, player *p) {
   return b;
 }
 
+//makes sure we stay in [0,360[
 float norm(double angle) { return fmod((angle + 360.0), 360.0); }
-
-double point_to_angle(vec2 p1, vec2 p2) {
-  vec2 delta = {p2.x - p1.x, p2.y - p1.y};
-  return rad_to_deg(atan2(delta.y, delta.x));
-}
 
 /*
 b**********c
@@ -119,18 +128,21 @@ static bool check_if_bbox_visible(bbox bb, player *p) {
   return false;
 }
 
+//shortcut
 vertex get_vertex_from_segment(engine* e,i16 vertex_id){
   return e->wData->vertexes[vertex_id];
 }
 
+
+//returns true if the segment is in the player's field of view, and sets x1 and x2 to the x position of the segment for the screen
 bool is_segment_in_fov(player* p,segment seg,int* x1,int* x2){
   vec2 player = {.x = p->x, .y = p->y};
-  vertex v1 = get_vertex_from_segment(p->engine, seg.start_vertex_id);
-  vertex v2 = get_vertex_from_segment(p->engine, seg.end_vertex_id);
+  vertex v1 = seg.start_vertex;
+  vertex v2 = seg.end_vertex;
   vec2 v1v = {.x = v1.x, .y = v1.y};
   vec2 v2v = {.x = v2.x, .y = v2.y};
-  double angle1 = point_to_angle(player, v1v);
-  double angle2 = point_to_angle(player, v2v);
+  double angle1 = point_to_angle(player, v1v); //angle from player to v1
+  double angle2 = point_to_angle(player, v2v); //angle from player to v2
   double span = norm(angle1 - angle2);
   if (span >= 180.0) return false;
   angle1 += p->angle;
@@ -140,13 +152,11 @@ bool is_segment_in_fov(player* p,segment seg,int* x1,int* x2){
     if (span1 >= span + FOV)
       return false;
     // used for clipping walls
-    angle1 = -HALF_FOV;
   }
   double span2 = norm(HALF_FOV - angle2);
   if (span2 > FOV) {
     if (span2 >= span + FOV)
       return false;
-    angle2 = HALF_FOV;
   }
   *x1 = angle_to_x_pos(angle1);
   *x2 = angle_to_x_pos(angle2);

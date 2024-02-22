@@ -103,8 +103,8 @@ void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len,
                    vertex *vertexes) {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   for (int i = 0; i < len; i++) {
-    vertex p1 = vertexes[linedefs[i].start_vertex_id];
-    vertex p2 = vertexes[linedefs[i].end_vertex_id];
+    vertex p1 = linedefs[i].start_vertex;
+    vertex p2 = linedefs[i].end_vertex;
     SDL_RenderDrawLine(renderer, p1.x, p1.y, p2.x, p2.y);
   }
 }
@@ -154,8 +154,8 @@ static void draw_player(map_renderer *mr) {
 }
 
 void draw_segment(map_renderer *mr, segment seg) {
-  vertex v_start = mr->vertexes[seg.start_vertex_id];
-  vertex v_end = mr->vertexes[seg.end_vertex_id];
+  vertex v_start = seg.start_vertex;
+  vertex v_end = seg.end_vertex;
   SDL_RenderDrawLine(mr->renderer, v_start.x, v_start.y, v_end.x, v_end.y);
 }
 
