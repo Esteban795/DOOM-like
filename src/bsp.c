@@ -176,7 +176,7 @@ void render_bsp_node(bsp *b, size_t node_id) {
     SDL_SetRenderDrawColor(b->engine->map_renderer->renderer, 0, 255, 0, 255);
     int x1, x2;
     for (i16 i = 0; i < ss.num_segs; i++) {
-      segment seg = b->engine->wData->segments[ss.first_seg_id + i];
+      segment seg = ss.segs[i];
       if (is_segment_in_fov(b->player, seg, &x1, &x2)) {
         draw_vertical_lines(b->engine->map_renderer, x1, x2, subsector_id);
       }

@@ -99,8 +99,7 @@ vertex *remap_vertexes(vertex *vertexes, int len, int *map_bounds) {
   return remapped_vertexes;
 }
 
-void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len,
-                   vertex *vertexes) {
+void draw_linedefs(SDL_Renderer *renderer, linedef *linedefs, int len) {
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
   for (int i = 0; i < len; i++) {
     vertex p1 = linedefs[i].start_vertex;
@@ -163,7 +162,7 @@ void draw_subsector(map_renderer *mr, i16 subsector_id) {
   subsector ss = mr->wData->subsectors[subsector_id];
   SDL_SetRenderDrawColor(mr->renderer, 0, 255, 0, 255);
   for (i16 i = 0; i < ss.num_segs; i++) {
-    segment seg = mr->wData->segments[ss.first_seg_id + i];
+    segment seg = ss.segs[i];
     draw_segment(mr, seg);
   }
 }
