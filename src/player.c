@@ -48,9 +48,11 @@ void update_player(player *p, int mouse_x, const uint8_t *keyboard_state) {
   }
   p->x += vec[0];
   p->y += vec[1];
-  p->angle += rot_speed * mouse_x;
-  p->angle = fmod(p->angle, 360);
-  p->angle = p->angle < 0 ? 360 + p->angle : p->angle;
+  if (SDL_WINDOW_INPUT_FOCUS) {
+    p->angle += rot_speed * mouse_x;
+    p->angle = fmod(p->angle, 360);
+    p->angle = p->angle < 0 ? 360 + p->angle : p->angle;
+  }
 }
 
 void player_free(player *p) { free(p); }
