@@ -1,12 +1,10 @@
 #include "../include/subsector.h"
-#include <stdlib.h>
 
 subsector read_subsector(FILE *f, int offset,segment* segments) {
   subsector s;
   s.num_segs = read_i16(f, offset);
   s.segs = malloc(sizeof(segment) * s.num_segs);
   i16 first_id = read_i16(f, offset + 2);
-  s.segs[0] = segments[first_id];
   for (i16 i = 0; i < s.num_segs; i++) {
     s.segs[i] = segments[first_id + i];
   }

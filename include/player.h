@@ -4,12 +4,7 @@
 #include <math.h>
 
 #include "structs.h"
-
-#define PLAYER_HEIGHT 100;
-#define PLAYER_SPEED .05
-#define PLAYER_ROTATION_SPEED .03
-#define MOUSE_SENSITIVY 0.3
-#define DIAGONAL_CORRECTION 1/sqrt(2)
+#include "geometry.h"
 
 double deg_to_rad(double deg);
 

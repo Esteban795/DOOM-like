@@ -1,9 +1,7 @@
 #include "../include/player.h"
 
 #define M_PI 3.14159265358979323846
-#define HALF_M_PI 1.57079632679489661923
 
-double deg_to_rad(double deg) { return deg * (M_PI / 180); }
 
 player *player_init(engine *e) {
   player *p = malloc(sizeof(player));

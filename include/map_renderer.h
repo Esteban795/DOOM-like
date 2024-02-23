@@ -6,22 +6,8 @@
 #include "player.h"
 #include "structs.h"
 #include "vertex.h"
+#include "settings.h"
 
-#define RES_W 320
-#define RES_H 200
-#define SCALE 5
-
-#define WIDTH RES_W *SCALE
-#define HEIGHT RES_H *SCALE
-#define HALF_WIDTH ((double) WIDTH / 2)
-#define OUT_MIN 30
-#define OUT_MAX_W (WIDTH - 30)
-#define OUT_MAX_H (HEIGHT - 30)
-
-#define SCREEN_DISTANCE (HALF_WIDTH / tan(HALF_FOV))
-
-#define DEFAULT_MAP_BOUNDS                                                     \
-  { OUT_MIN, OUT_MAX_W, OUT_MIN, OUT_MAX_H }
 
 int *get_map_bounds(vertex *vertexes, int len);
 

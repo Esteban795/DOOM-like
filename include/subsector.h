@@ -4,8 +4,6 @@
 #include "byte_reader.h"
 #include "lump.h"
 #include "segment.h"
-#include "linedef.h"
-#include "vertex.h"
 
 // https://doomwiki.org/wiki/Subsector
 

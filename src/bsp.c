@@ -1,30 +1,5 @@
 #include "../include/bsp.h"
 
-#define M_PI 3.14159265358979323846
-#define FOV 90.0
-#define HALF_FOV (FOV / 2.0)
-
-double rad_to_deg(double rad) { return rad * (180 / M_PI); }
-
-/*
-Project point coordinate in SCREEN_DISTANCE, according to the angle
-they form with player's POV
-*/
-int angle_to_x_pos(double angle){
-  if (angle > 0) {
-    return (int)(SCREEN_DISTANCE - tan(deg_to_rad(angle)) * (double)WIDTH / 2);
-  } else {
-    return (int)(tan(deg_to_rad(angle)) * (double)WIDTH / 2 + SCREEN_DISTANCE);
-  }
-}
-
-/* 
-Get the angle from p1 to p2
-*/
-double point_to_angle(vec2 p1, vec2 p2) {
-  vec2 delta = {p2.x - p1.x, p2.y - p1.y};
-  return rad_to_deg(atan2(delta.y, delta.x));
-}
 
 bsp *bsp_init(engine *e, player *p) {
   bsp *b = malloc(sizeof(bsp));
@@ -37,8 +12,6 @@ bsp *bsp_init(engine *e, player *p) {
   return b;
 }
 
-//makes sure we stay in [0,360[
-float norm(double angle) { return fmod((angle + 360.0), 360.0); }
 
 /*
 b**********c
@@ -128,12 +101,6 @@ static bool check_if_bbox_visible(bbox bb, player *p) {
   return false;
 }
 
-//shortcut
-vertex get_vertex_from_segment(engine* e,i16 vertex_id){
-  return e->wData->vertexes[vertex_id];
-}
-
-
 //returns true if the segment is in the player's field of view, and sets x1 and x2 to the x position of the segment for the screen
 bool is_segment_in_fov(player* p,segment seg,int* x1,int* x2){
   vec2 player = {.x = p->x, .y = p->y};
@@ -151,7 +118,6 @@ bool is_segment_in_fov(player* p,segment seg,int* x1,int* x2){
   if (span1 > FOV) {
     if (span1 >= span + FOV)
       return false;
-    // used for clipping walls
   }
   double span2 = norm(HALF_FOV - angle2);
   if (span2 > FOV) {
