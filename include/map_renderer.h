@@ -4,10 +4,9 @@
 #include <SDL2/SDL.h>
 
 #include "player.h"
+#include "settings.h"
 #include "structs.h"
 #include "vertex.h"
-#include "settings.h"
-
 
 int *get_map_bounds(vertex *vertexes, int len);
 

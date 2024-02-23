@@ -14,7 +14,7 @@
 
 #define WIDTH RES_W *SCALE
 #define HEIGHT RES_H *SCALE
-#define HALF_WIDTH ((double) WIDTH / 2)
+#define HALF_WIDTH ((double)WIDTH / 2)
 #define OUT_MIN 30
 #define OUT_MAX_W (WIDTH - 30)
 #define OUT_MAX_H (HEIGHT - 30)
@@ -30,6 +30,6 @@
 #define PLAYER_SPEED .05
 #define PLAYER_ROTATION_SPEED .03
 #define MOUSE_SENSITIVY 0.3
-#define DIAGONAL_CORRECTION 1/sqrt(2)
+#define DIAGONAL_CORRECTION 1 / sqrt(2)
 
 #endif

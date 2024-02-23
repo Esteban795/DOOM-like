@@ -2,11 +2,11 @@
 #define BSP_H
 
 #include "geometry.h"
-#include "settings.h"
 #include "map_renderer.h"
+#include "player.h"
+#include "settings.h"
 #include "structs.h"
 #include "vec2.h"
-#include "player.h"
 
 bsp *bsp_init(engine *e, player *p);
 

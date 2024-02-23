@@ -18,12 +18,12 @@ linedef read_linedef(FILE *f, int offset, vertex *vertexes) {
 
 linedef *get_linedefs_from_lump(FILE *f, lump *directory, int lump_index,
                                 int num_bytes, int header_length,
-                                int len_linedefs,vertex* vertexes) {
+                                int len_linedefs, vertex *vertexes) {
   lump lump_info = directory[lump_index];
   linedef *linedefs = malloc(sizeof(linedef) * len_linedefs);
   for (int i = 0; i < len_linedefs; i++) {
     int offset = lump_info.lump_offset + i * num_bytes + header_length;
-    linedefs[i] = read_linedef(f, offset,vertexes);
+    linedefs[i] = read_linedef(f, offset, vertexes);
   }
   return linedefs;
 }

@@ -2,7 +2,6 @@
 
 #define M_PI 3.14159265358979323846
 
-
 player *player_init(engine *e) {
   player *p = malloc(sizeof(player));
   p->engine = e;

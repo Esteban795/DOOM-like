@@ -19,9 +19,9 @@ struct Linedef {
 
 typedef struct Linedef linedef;
 
-linedef read_linedef(FILE *f, int offset,vertex* vertexes);
+linedef read_linedef(FILE *f, int offset, vertex *vertexes);
 
 linedef *get_linedefs_from_lump(FILE *f, lump *directory, int lump_index,
                                 int num_bytes, int header_length,
-                                int len_linedefs,vertex* vertexes);
+                                int len_linedefs, vertex *vertexes);
 #endif

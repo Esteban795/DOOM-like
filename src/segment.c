@@ -1,7 +1,7 @@
 #include "../include/segment.h"
 #include <stdio.h>
 
-double bams_to_degrees(i16 bams){
+double bams_to_degrees(i16 bams) {
   double res = ((double)bams) * 180.0 / 65536.0;
   return res < 0 ? 360 + res : res;
 }
@@ -14,7 +14,7 @@ vertex get_vertex_from_id(i16 vertex_id, vertex *vertexes) {
   return vertexes[vertex_id];
 }
 
-segment read_segment(FILE *f, int offset,vertex *vertexes,linedef *linedefs) {
+segment read_segment(FILE *f, int offset, vertex *vertexes, linedef *linedefs) {
   segment s;
   s.start_vertex = get_vertex_from_id(read_i16(f, offset), vertexes);
   s.end_vertex = get_vertex_from_id(read_i16(f, offset + 2), vertexes);
@@ -28,13 +28,14 @@ segment read_segment(FILE *f, int offset,vertex *vertexes,linedef *linedefs) {
 
 segment *get_segments_from_lump(FILE *f, lump *directory, int lump_index,
                                 int num_bytes, int header_length,
-                                int len_segments,vertex* vertexes,linedef* linedefs) {
+                                int len_segments, vertex *vertexes,
+                                linedef *linedefs) {
   int offset = 0;
   lump lump_info = directory[lump_index];
   segment *segments = malloc(sizeof(segment) * len_segments);
   for (int i = 0; i < len_segments; i++) {
     offset = lump_info.lump_offset + i * num_bytes + header_length;
-    segments[i] = read_segment(f, offset,vertexes,linedefs);
+    segments[i] = read_segment(f, offset, vertexes, linedefs);
   }
   return segments;
 }

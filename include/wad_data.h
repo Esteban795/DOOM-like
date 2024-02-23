@@ -9,12 +9,12 @@
 #include "header.h"
 #include "linedef.h"
 #include "node.h"
+#include "sector.h"
 #include "segment.h"
+#include "sidedef.h"
 #include "subsector.h"
 #include "thing.h"
 #include "vertex.h"
-#include "sector.h"
-#include "sidedef.h"
 
 #define DT 2
 
@@ -29,8 +29,8 @@ struct WADData {
   segment *segments;
   thing *things;
   blockmap *blockmap;
-  sector* sectors;
-  sidedef* sidedefs;
+  sector *sectors;
+  sidedef *sidedefs;
   int len_vertexes;
   int len_linedefs;
   int len_nodes;

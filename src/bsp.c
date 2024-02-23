@@ -1,6 +1,5 @@
 #include "../include/bsp.h"
 
-
 bsp *bsp_init(engine *e, player *p) {
   bsp *b = malloc(sizeof(bsp));
   b->engine = e;
@@ -11,7 +10,6 @@ bsp *bsp_init(engine *e, player *p) {
   b->root_node_id = e->wData->len_nodes - 1;
   return b;
 }
-
 
 /*
 b**********c
@@ -101,17 +99,19 @@ static bool check_if_bbox_visible(bbox bb, player *p) {
   return false;
 }
 
-//returns true if the segment is in the player's field of view, and sets x1 and x2 to the x position of the segment for the screen
-bool is_segment_in_fov(player* p,segment seg,int* x1,int* x2){
+// returns true if the segment is in the player's field of view, and sets x1 and
+// x2 to the x position of the segment for the screen
+bool is_segment_in_fov(player *p, segment seg, int *x1, int *x2) {
   vec2 player = {.x = p->x, .y = p->y};
   vertex v1 = seg.start_vertex;
   vertex v2 = seg.end_vertex;
   vec2 v1v = {.x = v1.x, .y = v1.y};
   vec2 v2v = {.x = v2.x, .y = v2.y};
-  double angle1 = point_to_angle(player, v1v); //angle from player to v1
-  double angle2 = point_to_angle(player, v2v); //angle from player to v2
+  double angle1 = point_to_angle(player, v1v); // angle from player to v1
+  double angle2 = point_to_angle(player, v2v); // angle from player to v2
   double span = norm(angle1 - angle2);
-  if (span >= 180.0) return false;
+  if (span >= 180.0)
+    return false;
   angle1 += p->angle;
   angle2 += p->angle;
   double span1 = norm(angle1 + HALF_FOV);

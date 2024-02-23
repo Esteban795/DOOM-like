@@ -1,11 +1,9 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
-
+#include "settings.h"
 #include "vec2.h"
 #include <math.h>
-#include "settings.h"
-
 
 double rad_to_deg(double rad);
 

@@ -26,7 +26,7 @@ struct Engine {
   struct BSP *bsp;
   struct MapRenderer *map_renderer;
   int numkeys;
-  const uint8_t* keys;
+  const uint8_t *keys;
 };
 
 struct BSP {
